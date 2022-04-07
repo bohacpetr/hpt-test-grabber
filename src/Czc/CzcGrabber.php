@@ -9,7 +9,7 @@ use DOMNodeList;
 use DOMNode;
 use DOMXPath;
 use HPT\DTO\Product;
-use HPT\ProductList;
+use HPT\DTO\ProductList;
 use HPT\Exceptions\InvalidProductCodeException;
 use HPT\Exceptions\InvalidProductUrlException;
 use HPT\Exceptions\MalformedResponseException;
@@ -35,15 +35,20 @@ class CzcGrabber implements Grabber
     /** @var string[] */
     private $config;
 
-    public function __construct(ProductList $productList, array $config)
+    public function __construct(array $config)
     {
-        $this->productList = $productList;
+        $this->productList = new ProductList();
         $this->config = $config;
     }
 
-    public function getPrice(string $productId): float
+    public function getProductList(): ProductList
     {
-        $product = new Product($productId, null);
+        return $this->productList;
+    }
+
+    public function grabProduct(string $productId): void
+    {
+        $product = new Product($productId, null, null, null);
 
         try {
             $productLinkNodes = $this->searchProduct($productId);
@@ -78,8 +83,6 @@ class CzcGrabber implements Grabber
         }
 
         $this->productList->addProduct($product);
-
-        return $product->getPrice() ?? 0;
     }
 
     private function searchProduct(string $productId): DOMNodeList
@@ -110,7 +113,19 @@ class CzcGrabber implements Grabber
         $priceText = $nodeList->item(0)->textContent;
         $price = str_replace([' Kč', ' ', ','], ['', '', '.'], $priceText);
 
-        return new Product($productId, (float)$price);
+        $nodeList = $this->getNodeList($dom, $this->config['productNameXpath']);
+
+        $name = $nodeList->length !== 0
+            ? $nodeList->item(0)->textContent
+            : null;
+
+        $nodeList = $this->getNodeList($dom, $this->config['productRankingXpath']);
+
+        $ranking = $nodeList->length !== 0
+            ? (int)$nodeList->item(0)->textContent
+            : null;
+
+        return new Product($productId, (float)$price, $name, $ranking);
     }
 
     private function fetchUrl(string $url): string

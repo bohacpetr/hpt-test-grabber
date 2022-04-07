@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace HPT;
+namespace HPT\DTO;
 
-use HPT\DTO\Product;
 use IteratorAggregate;
 use Traversable;
 

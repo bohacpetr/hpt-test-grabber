@@ -30,9 +30,11 @@ class Dispatcher
 
         while (($productId = fgets($f, 1000)) !== false) {
             $productId = rtrim($productId, "\n\r");
-            $this->grabber->getPrice($productId);
+            $this->grabber->grabProduct($productId);
         }
 
-        return $this->output->getJson();
+        $productList = $this->grabber->getProductList();
+
+        return $this->output->getJson($productList);
     }
 }

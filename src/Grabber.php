@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace HPT;
 
+use HPT\DTO\ProductList;
+
 interface Grabber
 {
-    public function getPrice(string $productId): float;
+    public function grabProduct(string $productId): void;
+    public function getProductList(): ProductList;
 }
