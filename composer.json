@@ -1,0 +1,23 @@
+{
+	"name": "bohyn/hptronic",
+	"description": "Homework",
+	"type": "project",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Petr Bohac",
+			"email": "bohyn.cz@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"HPT\\": "src/"
+		}
+	},
+	"require": {
+		"php": "7.3",
+		"ext-dom": "*",
+		"ext-curl": "*",
+		"nette/di": "^3.0"
+	}
+}

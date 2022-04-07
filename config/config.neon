@@ -1,0 +1,19 @@
+parameters:
+	grabber:
+		czc:
+			detailUrlPattern: 'https://www.czc.cz%s'
+			searchUrlPattern: 'https://www.czc.cz/%s/hledat'
+
+			productDetailUrlXpath: '//div[@id="tiles"]//div[@class="tile-title"]/h5/a'
+			productCodeXpath: '//div[@id="product-detail"]//span[@class="pd-next-in-category__item-value"]'
+			productPriceXpath: '//span[@class="price-vatin"]'
+
+			encoding: 'utf8'
+
+	sourceFile: 'vstup.txt'
+
+services:
+	- \HPT\Dispatcher(sourceFile: %sourceFile%)
+	- \HPT\Czc\CzcGrabber(config: %grabber.czc%)
+	- \HPT\Czc\CzcOutput()
+	- \HPT\ProductList()
